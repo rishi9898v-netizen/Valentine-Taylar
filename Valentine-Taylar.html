@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 500px;
+            position: relative;
+        }
+
+        h1 {
+            color: #ff1493;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .heart {
+            font-size: 80px;
+            animation: heartbeat 1.5s infinite;
+            margin: 20px 0;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+
+        .question {
+            font-size: 1.5em;
+            color: #ff69b4;
+            margin-bottom: 40px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            position: relative;
+            padding: 20px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            transform: scale(1);
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 20, 147, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #ddd, #bbb);
+            color: #666;
+        }
+        
+        #noBtn.moving {
+            position: absolute;
+            transition: all 0.15s ease;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+        }
+
+        .terms-container {
+            max-height: 400px;
+            overflow-y: scroll;
+            border: 2px solid #ff69b4;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fff;
+            text-align: left;
+        }
+
+        .terms-content h3 {
+            color: #ff1493;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .terms-content h4 {
+            color: #ff69b4;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .terms-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .terms-content li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .terms-content p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        #acceptBtn {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #acceptBtn:disabled {
+            background: linear-gradient(135deg, #ddd, #bbb);
+            cursor: not-allowed;
+        }
+
+        #acceptBtn:not(:disabled):hover {
+            transform: scale(1.05);
+        }
+
+        .celebration h2 {
+            color: #ff1493;
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: fadeInScale 0.5s ease;
+        }
+
+        .celebration p {
+            font-size: 1.3em;
+            color: #ff69b4;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            animation: float 6s infinite ease-in-out;
+            opacity: 0.3;
+            font-size: 30px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-bg">
+        <div class="floating-heart" style="left: 10%; top: 20%;">💕</div>
+        <div class="floating-heart" style="left: 80%; top: 30%; animation-delay: 1s;">❤️</div>
+        <div class="floating-heart" style="left: 20%; top: 70%; animation-delay: 2s;">💖</div>
+        <div class="floating-heart" style="left: 85%; top: 65%; animation-delay: 3s;">💗</div>
+        <div class="floating-heart" style="left: 50%; top: 10%; animation-delay: 1.5s;">💝</div>
+    </div>
+
+    <div class="container">
+        <div id="questionBox">
+            <h1>Hey Taylar! 💕</h1>
+            <div class="heart">💖</div>
+            <p class="question">Will you be my Valentine?</p>
+            
+            <div class="button-container">
+                <button id="yesBtn" onclick="celebrate()">YES! 💕</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="termsBox" class="celebration">
+            <h2>Wait! 📋</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1em;">Please read and accept the Terms & Conditions:</p>
+            
+            <div class="terms-container">
+                <div class="terms-content">
+                    <h3>VALENTINE'S DAY RELATIONSHIP LICENSE AGREEMENT 💕</h3>
+                    <p><strong>Version 2024.2.14 (Build 143-LOVE)</strong></p>
+                    <p><strong>Effective Date:</strong> February 14, 2024, 12:00:01 AM EST</p>
+                    <p><strong>Last Updated:</strong> Right Now</p>
+                    
+                    <p><em>PLEASE READ THIS AGREEMENT CAREFULLY BEFORE PROCEEDING. BY CLICKING "I ACCEPT," YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY ALL TERMS AND CONDITIONS SET FORTH HEREIN.</em></p>
+                    
+                    <h4>ARTICLE I: DEFINITIONS AND INTERPRETATIONS</h4>
+                    <p><strong>Section 1.01 - Definitions.</strong> For purposes of this Agreement, the following terms shall have the meanings ascribed to them below:</p>
+                    <p>(a) "Valentine" shall mean and refer to the party of the first part, hereinafter referred to as "Me," "I," or "Your Amazing Significant Other."</p>
+                    <p>(b) "You" or "Licensee" shall mean and refer to the party of the second part who is currently reading this document and contemplating acceptance of these terms.</p>
+                    <p>(c) "Relationship" shall mean the romantic, emotional, and physical connection established between Valentine and Licensee pursuant to this Agreement.</p>
+                    <p>(d) "Love" shall be defined as an intense feeling of deep affection, care, and commitment, the precise measurement and quantification of which shall be determined solely by Valentine.</p>
+                    <p>(e) "Forever" shall mean a period of time extending indefinitely into the future without limitation, cessation, or termination, except as otherwise provided in Section 23.07(c).</p>
+                    <p>(f) "Cuddles" shall refer to physical embraces, snuggling, spooning, and other forms of intimate physical proximity as defined in Appendix C (not included but you get the idea).</p>
+                    <p>(g) "Quality Time" shall mean any period during which Licensee's undivided attention is directed toward Valentine, free from distractions including but not limited to: mobile devices, video games, television, sports, work, hobbies, friends (subject to exceptions), and any other competing interests.</p>
+                    
+                    <h4>ARTICLE II: GRANT OF LICENSE</h4>
+                    <p><strong>Section 2.01 - License Grant.</strong> Subject to the terms and conditions of this Agreement, Valentine hereby grants to Licensee a non-exclusive, non-transferable, revocable (at Valentine's sole discretion) license to:</p>
+                    <p>(a) Hold hands with Valentine in public and private settings;</p>
+                    <p>(b) Receive hugs, kisses, and other displays of affection from Valentine;</p>
+                    <p>(c) Refer to Valentine using terms of endearment including but not limited to "babe," "baby," "honey," "sweetheart," or other mutually agreed upon nicknames;</p>
+                    <p>(d) Participate in relationship activities as set forth in Article VII hereof.</p>
+                    
+                    <p><strong>Section 2.02 - Restrictions on License.</strong> Licensee acknowledges and agrees that the license granted herein does NOT include the right to:</p>
+                    <p>(a) Transfer, assign, sublicense, or otherwise convey any rights under this Agreement to any third party;</p>
+                    <p>(b) Reverse engineer, decompile, or disassemble Valentine's emotions, thought processes, or decision-making frameworks;</p>
+                    <p>(c) Create derivative works based on Valentine without express written consent;</p>
+                    <p>(d) Use Valentine's name, image, or likeness for commercial purposes without prior authorization and appropriate compensation (compensation may include but is not limited to: flowers, chocolate, surprise dates, or really good compliments).</p>
+                    
+                    <h4>ARTICLE III: SCOPE OF AGREEMENT</h4>
+                    <p><strong>Section 3.01 - Territorial Scope.</strong> This Agreement shall be enforceable in all jurisdictions, territories, and geographical locations where Licensee may be physically present, including but not limited to: Licensee's residence, place of employment, educational institutions, public spaces, private venues, virtual environments, and any other location whether known or unknown at the time of acceptance.</p>
+                    
+                    <p><strong>Section 3.02 - Temporal Scope.</strong> This Agreement shall commence upon acceptance and continue in perpetuity unless terminated in accordance with Article XXIII. The obligations set forth herein shall survive termination to the extent specified in Section 23.09.</p>
+                    
+                    <h4>ARTICLE IV: LICENSEE OBLIGATIONS - COMMUNICATION REQUIREMENTS</h4>
+                    <p><strong>Section 4.01 - Quality of Communication.</strong> All communications from Licensee to Valentine shall meet the following quality standards:</p>
+                    <p>(a) Messages shall be spelled correctly and use proper grammar, except where informal communication style has been mutually established;</p>
+                    <p>(b) Emoji usage is encouraged and shall be liberally employed to convey emotion, warmth, and affection;</p>
+                    <p>(c) Communications shall not consist solely of one-word responses such as "ok," "cool," or "yeah" unless preceded or followed by substantive content;</p>
+                    <p>(d) Licensee shall proactively initiate conversations and shall not rely solely on Valentine to maintain communication flow.</p>
+                    
+                    <h4>ARTICLE V: PHYSICAL AFFECTION REQUIREMENTS</h4>
+                    <p><strong>Section 5.01 - Minimum Affection Standards.</strong> Licensee acknowledges that physical affection is a material component of the Relationship and hereby agrees to provide the following minimum levels of physical affection:</p>
+                    <p>(a) <em>Kisses:</em> Minimum of ten (10) kisses per day, distributed throughout the day at Valentine's discretion. Categories of kisses include but are not limited to: greeting kisses, goodbye kisses, forehead kisses, cheek kisses, surprise kisses, and goodnight kisses. Quality and duration of kisses shall be subject to Valentine's satisfaction.</p>
+                    <p>(b) <em>Hugs:</em> Unlimited hugs shall be provided upon request, with a minimum of five (5) substantial hugs per day lasting no less than eight (8) seconds each. "Substantial" hugs are defined as full-body embraces with appropriate pressure and duration, excluding brief side-hugs or token gestures.</p>
+                    <p>(c) <em>Hand Holding:</em> When walking together in public or private settings, Licensee shall hold Valentine's hand unless such action would create a safety hazard or is otherwise physically impractical.</p>
+                    <p>(d) <em>Cuddling:</em> Licensee agrees to engage in cuddling sessions with Valentine no fewer than three (3) times per week, with each session lasting a minimum of thirty (30) minutes. Cuddling positions shall include but not be limited to: spooning (big and little), face-to-face embrace, head-on-chest position, and other configurations as determined by mutual comfort and Valentine's preference.</p>
+                    
+                    <p><strong>Section 5.02 - Spontaneous Affection.</strong> In addition to the minimum requirements set forth in Section 5.01, Licensee acknowledges that spontaneous displays of affection are highly valued and encouraged. Such displays may include but are not limited to: surprise hugs from behind, random forehead kisses, unprompted compliments, and other gestures of affection as circumstances permit.</p>
+                    
+                    <h4>ARTICLE VI: FOOD AND BEVERAGE PROVISIONS</h4>
+                    <p><strong>Section 6.01 - Food Sharing Agreement.</strong> Notwithstanding any statements to the contrary, Licensee hereby acknowledges and agrees to the following irrevocable truths regarding food consumption in the Relationship:</p>
+                    <p>(a) When Valentine states "I'm not hungry" or "I don't want anything," Licensee shall nonetheless order or prepare sufficient food to share, as Valentine reserves the right to consume portions of Licensee's food without prior notice.</p>
+                    <p>(b) The phrase "Can I have a bite?" shall be interpreted liberally and may result in Valentine consuming anywhere from one (1) bite to fifty percent (50%) of Licensee's meal, at Valentine's sole discretion.</p>
+                    <p>(c) French fries, in particular, shall be considered community property and subject to equal distribution regardless of who ordered them.</p>
+                    <p>(d) Licensee shall not express displeasure, frustration, or annoyance when Valentine exercises these food-sharing rights, as such expressions shall constitute a material breach of this Agreement.</p>
+                    
+                    <p><strong>Section 6.02 - Dessert Obligations.</strong> Licensee recognizes that desserts hold special significance in the Relationship and agrees to the following:</p>
+                    <p>(a) When dining out, Licensee shall always inquire whether Valentine would like dessert, regardless of whether Valentine expressed interest in dessert earlier in the meal;</p>
+                    
+                    <p><strong>Section 6.03 - Culinary Adventure Clause.</strong> Licensee agrees to accompany Valentine in trying new restaurants, cuisines, and food establishments with an open mind and positive attitude, even if such establishments serve food outside of Licensee's normal preferences.</p>
+                    
+                    <h4>ARTICLE VII: MANDATORY RELATIONSHIP ACTIVITIES</h4>
+                    <p><strong>Section 7.01 - Date Night Requirements.</strong> Licensee shall participate in regular date activities with Valentine according to the following schedule:</p>
+                    <p>(a) Minimum of one (1) formal date per month, involving planning, preparation, and execution of an activity mutually enjoyed by both parties;</p>
+                    <p>(b) Special occasion dates for birthdays, anniversaries, Valentine's Day, and other significant dates as designated by Valentine.</p>
+                    
+                    <p><strong>Section 7.02 - Entertainment Obligations.</strong> Licensee hereby agrees to the following entertainment-related obligations:</p>
+                    <p>(a) <em>Television and Streaming:</em> Licensee shall watch television shows and movies selected by Valentine with full attention and engagement. Multi-tasking during such viewing (including but not limited to phone usage, work activities, or gaming) is strictly prohibited unless explicitly authorized by Valentine.</p>
+                    <p>(b) <em>Spoiler Prevention:</em> For any shows or series being watched jointly, Licensee shall not watch ahead without Valentine's express permission. Violation of this provision shall result in mandatory re-watching of all episodes viewed without Valentine's presence, plus additional penalties as determined by Valentine.</p>
+                    <p>(c) <em>Music Selection:</em> While Licensee may have music preferences, Licensee agrees that Valentine shall have equal or greater authority in music selection during joint activities, car rides, and other shared listening experiences.</p>
+                    <p>(d) <em>Dancing:</em> Licensee shall dance with Valentine upon request, regardless of Licensee's self-assessed dancing ability, comfort level, or presence of other persons. Such dancing may occur in private or public settings, to any genre of music, and without prior notice.</p>
+                    
+                    <p><strong>Section 7.03 - Photography and Social Media.</strong> Licensee acknowledges that Valentine may wish to document Relationship activities through photography and videography. Licensee agrees to:</p>
+                    <p>(a) Pose for photographs when requested, with genuine smiles and appropriate enthusiasm;</p>
+                    <p>(b) Take photographs of Valentine at Valentine's request, with reasonable effort to achieve favorable angles, lighting, and composition;</p>
+                    <p>(c) Participate in "couple photos" and selfies without complaint;</p>
+                    <p>(d) Refrain from making negative comments about Licensee's appearance in photographs, as such comments may cause Valentine distress.</p>
+                    
+                    <h4>ARTICLE VIII: EMOTIONAL SUPPORT REQUIREMENTS</h4>
+                    <p><strong>Section 8.01 - General Support Obligations.</strong> Licensee recognizes that emotional support is a cornerstone of the Relationship and agrees to provide such support in accordance with the following provisions:</p>
+                    <p>(a) Licensee shall listen attentively when Valentine wishes to discuss feelings, concerns, daily events, or any other matters Valentine deems important;</p>
+                    <p>(b) Licensee shall provide comfort and reassurance when Valentine is experiencing stress, anxiety, sadness, or other difficult emotions;</p>
+                    <p>(c) Licensee shall validate Valentine's feelings and perspectives, even when Licensee may not fully understand or agree with them;</p>
+                    <p>(d) Licensee shall refrain from attempting to "fix" Valentine's problems unless specifically requested to do so, recognizing that sometimes Valentine simply needs to be heard.</p>
+                    
+                    <p><strong>Section 8.02 - Compliments and Affirmations.</strong> Licensee shall regularly provide Valentine with compliments and affirmations according to the following standards:</p>
+                    <p>(a) Minimum of three (3) genuine compliments per day, addressing Valentine's appearance, personality, accomplishments, or other positive attributes;</p>
+                    <p>(b) When Valentine asks "Do I look okay?" or similar questions, Licensee shall respond enthusiastically in the affirmative, regardless of the context or Valentine's actual appearance at the time;</p>
+                    <p>(c) Compliments shall be specific and detailed rather than generic, demonstrating that Licensee has noticed particular aspects of Valentine's appearance or behavior;</p>
+                    <p>(d) Licensee shall provide reassurance when Valentine expresses self-doubt or insecurity, with patience and understanding.</p>
+                    
+                    <p><strong>Section 8.03 - Bad Day Protocol.</strong> When Valentine is having a difficult day, Licensee shall employ the following protocol:</p>
+                    <p>(a) Acknowledge Valentine's feelings and express sympathy;</p>
+                    <p>(b) Offer physical comfort in the form of hugs, cuddles, or other appropriate affection;</p>
+                    <p>(c) Provide Valentine's favorite comfort foods, beverages, or treats;</p>
+                    <p>(d) Offer to engage in Valentine's preferred comfort activities, which may include but are not limited to: watching favorite shows, listening to music, talking, or simply being present;</p>
+                    <p>(e) Refrain from minimizing Valentine's concerns or suggesting that Valentine is overreacting.</p>
+                    
+                    <h4>ARTICLE IX: PERSONAL PROPERTY AND CLOTHING PROVISIONS</h4>
+                    <p><strong>Section 9.01 - Hoodie Requisition Rights.</strong> Valentine hereby reserves the unconditional and irrevocable right to borrow, wear, and temporarily (or permanently) appropriate any hoodies, sweatshirts, or oversized clothing items belonging to Licensee. Licensee acknowledges and agrees that:</p>
+                    <p>(a) Any hoodie worn by Valentine shall be deemed "cuter on Valentine" regardless of original ownership;</p>
+                    <p>(b) Return of borrowed hoodies shall occur at Valentine's discretion and timeline;</p>
+                    <p>(c) Licensee shall not request return of hoodies that Valentine has claimed, as such requests shall be deemed void ab initio;</p>
+                    <p>(d) Licensee shall maintain an adequate supply of hoodies to accommodate both Licensee's needs and Valentine's borrowing activities.</p>
+                    
+                    <p><strong>Section 9.02 - Temperature Regulation Assistance.</strong> Licensee acknowledges that Valentine may experience temperature sensations differently than Licensee and agrees to:</p>
+                    <p>(a) Provide physical warmth to Valentine when Valentine indicates feeling cold, regardless of Licensee's own temperature comfort;</p>
+                    <p>(b) Offer jackets, sweaters, or other warming garments to Valentine when needed;</p>
+                    <p>(c) Adjust thermostats, blankets, or other environmental controls to accommodate Valentine's comfort preferences;</p>
+                    <p>(d) Serve as a human heating source through cuddling, hand-holding, or other physical contact when Valentine requires warmth.</p>
+                    
+                    <h4>ARTICLE X: HUMOR AND ENTERTAINMENT PROVISIONS</h4>
+                    <p><strong>Section 10.01 - Joke Tolerance Agreement.</strong> Licensee acknowledges that Valentine may occasionally tell jokes, puns, or engage in other forms of humor that may be of varying quality. Licensee agrees to:</p>
+                    <p>(a) Laugh at Valentine's jokes regardless of actual comedic value;</p>
+                    <p>(b) Provide positive encouragement for Valentine's humor attempts;</p>
+                    <p>(c) Refrain from excessive eye-rolling, groaning, or other expressions of disapproval at Valentine's dad jokes;</p>
+                    <p>(d) Recognize that Valentine's humor is part of Valentine's charm and appeal.</p>
+                    
+                    <p><strong>Section 10.02 - Reciprocal Humor Standards.</strong> While Licensee must tolerate Valentine's jokes per Section 10.01, Valentine reserves the right to critique, mock, or respond sarcastically to Licensee's jokes at Valentine's discretion. This asymmetry is acknowledged as fair and reasonable by both parties.</p>
+                    
+                    <h4>ARTICLE XI: DISPUTE RESOLUTION AND ARGUMENT PROTOCOLS</h4>
+                    <p><strong>Section 11.01 - Disagreement Management.</strong> In the event of disagreements or arguments between the parties, the following procedures shall apply:</p>
+                    <p>(a) Licensee shall remain calm and avoid raising voice volume above conversational levels;</p>
+                    <p>(b) Licensee shall listen to Valentine's perspective without interruption;</p>
+                    <p>(c) Licensee shall acknowledge Valentine's feelings and validate Valentine's concerns;</p>
+                    <p>(d) Licensee shall occasionally concede arguments to Valentine even when Licensee believes Licensee is correct, recognizing that harmony in the Relationship sometimes supersedes being right;</p>
+                    <p>(e) Licensee shall never go to bed angry and shall work toward resolution before sleep;</p>
+                    <p>(f) Licensee shall apologize when appropriate and shall do so sincerely rather than merely to end the disagreement.</p>
+                    
+                    <p><strong>Section 11.02 - "I'm Fine" Interpretation Clause.</strong> Licensee acknowledges and agrees that when Valentine states "I'm fine," such statement may require interpretation and further inquiry. Licensee shall:</p>
+                    <p>(a) Recognize that "I'm fine" may not actually mean Valentine is fine;</p>
+                    <p>(b) Gently inquire whether Valentine would like to discuss any concerns;</p>
+                    <p>(c) Provide space if Valentine genuinely wishes to be left alone, while remaining attentive to signs that Valentine actually wants Licensee to pursue the matter further;</p>
+                    <p>(d) Exercise reasonable judgment and emotional intelligence in such situations.</p>
+                    
+                    <h4>ARTICLE XII: REMEMBRANCE AND OBSERVANCE OF IMPORTANT DATES</h4>
+                    <p><strong>Section 12.01 - Mandatory Observance Dates.</strong> Licensee shall remember and appropriately observe the following dates without fail:</p>
+                    <p>(a) Valentine's birthday;</p>
+                    <p>(b) Anniversary of first date;</p>
+                    <p>(c) Anniversary of becoming official;</p>
+                    <p>(d) Valentine's Day;</p>
+                    <p>(e) Any other dates designated as significant by Valentine.</p>
+                    
+                    <p><strong>Section 12.02 - Reminder Grace Period.</strong> Valentine may, at Valentine's discretion, provide reminders of upcoming important dates. However, Licensee shall not rely on such reminders and shall maintain independent awareness of all dates specified in Section 12.01. Receipt of reminders does not diminish Licensee's obligation to remember such dates independently.</p>
+                    
+                    <p><strong>Section 12.03 - Gift Giving Standards.</strong> For occasions specified in Section 12.01, Licensee shall provide gifts that are:</p>
+                    <p>(a) Thoughtful and demonstrate knowledge of Valentine's interests and preferences;</p>
+                    <p>(b) Timely and provided on or before the applicable date;</p>
+                    <p>(c) Wrapped or presented in an aesthetically pleasing manner;</p>
+                    <p>(d) Accompanied by a card or note expressing Licensee's feelings.</p>
+                    
+                    <h4>ARTICLE XIII: SOCIAL MEDIA AND DIGITAL PRESENCE</h4>
+                    <p><strong>Section 13.01 - Relationship Status Disclosure.</strong> Licensee agrees to accurately represent the Relationship on all social media platforms where Licensee maintains a presence, including updating relationship status to reflect the current state of the Relationship.</p>
+                    
+                    <p><strong>Section 13.02 - Photo Posting Rights.</strong> Valentine shall have final approval over all photographs of Valentine posted to social media by Licensee. Licensee shall:</p>
+                    <p>(a) Seek Valentine's approval before posting any photo that includes Valentine;</p>
+                    <p>(b) Promptly remove any photo if Valentine requests removal;</p>
+                    <p>(c) Post flattering photos of Valentine with appropriate captions expressing affection.</p>
+                    
+                    <h4>ARTICLE XIV: HEALTH AND WELLNESS SUPPORT</h4>
+                    <p><strong>Section 14.01 - Illness Care Protocol.</strong> When Valentine is ill or unwell, Licensee shall:</p>
+                    <p>(a) Provide appropriate care, comfort, and support;</p>
+                    <p>(b) Obtain medicine, food, beverages, or other supplies as needed;</p>
+                    <p>(c) Maintain physical presence with Valentine to the extent practical and desired by Valentine;</p>
+                    <p>(d) Refrain from complaining about potential exposure to illness.</p>
+                    
+                    <h4>ARTICLE XV: ADVENTURE AND NEW EXPERIENCE REQUIREMENTS</h4>
+                    <p><strong>Section 15.01 - Spontaneity Clause.</strong> Licensee agrees to embrace spontaneity and adventure within reasonable limits. This includes:</p>
+                    <p>(a) Agreeing to spontaneous outings or activities proposed by Valentine;</p>
+                    <p>(b) Trying new experiences, restaurants, or activities together;</p>
+                    <p>(c) Maintaining a positive attitude toward new experiences even if outside Licensee's comfort zone;</p>
+                    <p>(d) Participating in seasonal activities such as pumpkin picking, Christmas light viewing, beach trips, or other seasonal traditions.</p>
+                    
+                    <h4>ARTICLE XVI: SLEEPING ARRANGEMENTS AND BEDTIME PROTOCOLS</h4>
+                    <p><strong>Section 16.01 - Spooning Position Rights.</strong> Licensee acknowledges that Valentine reserves the right to designate spooning positions and may alternate between being the big spoon and little spoon at Valentine's preference. Licensee shall accommodate such preferences without complaint.</p>
+                    
+                    <p><strong>Section 16.02 - Bed Space Allocation.</strong> Notwithstanding the physical dimensions of any bed shared by the parties, Valentine shall be entitled to occupy as much space as desired, and Licensee shall make reasonable accommodations to ensure Valentine's comfort.</p>
+                    
+                    <h4>ARTICLE XVII: SKILL AND HOBBY SUPPORT</h4>
+                    <p><strong>Section 17.01 - Interest Support Obligation.</strong> Licensee shall demonstrate genuine interest in and support for Valentine's hobbies, interests, and activities by:</p>
+                    <p>(a) Asking about Valentine's hobbies and activities;</p>
+                    <p>(b) Attending events, performances, or activities where Valentine is participating;</p>
+                    <p>(c) Celebrating Valentine's achievements and milestones;</p>
+                    <p>(d) Refraining from dismissive or condescending comments about Valentine's interests.</p>
+                    
+                    <p><strong>Section 17.02 - Reciprocal Interest Expectation.</strong> Licensee may reasonably expect Valentine to show similar interest in Licensee's hobbies, though the specific terms of such reciprocity shall be negotiated separately and are not governed by this Agreement.</p>
+                    
+                    <h4>ARTICLE XVIII: PRIVACY AND BOUNDARIES</h4>
+                    <p><strong>Section 18.01 - Reasonable Privacy Rights.</strong> Both parties acknowledge the right to reasonable privacy in certain matters. However, Valentine retains the right to ask about Licensee's activities, whereabouts, and communications, and Licensee shall respond honestly and promptly to such inquiries.</p>
+                    
+                    <p><strong>Section 18.02 - Phone Transparency.</strong> While Licensee maintains ownership of Licensee's phone and related accounts, Licensee agrees to maintain transparency with Valentine and shall not hide communications, activities, or information that would reasonably be of interest or concern to Valentine.</p>
+                    
+                    <h4>ARTICLE XIX: WARRANTIES AND REPRESENTATIONS</h4>
+                    <p><strong>Section 19.01 - Licensee Warranties.</strong> Licensee hereby represents and warrants that:</p>
+                    <p>(a) Licensee has full power and authority to enter into this Agreement;</p>
+                    <p>(b) Licensee's feelings for Valentine are genuine and sincerely held;</p>
+                    <p>(c) Licensee is not currently bound by any conflicting romantic agreements with third parties;</p>
+                    <p>(d) All statements made by Licensee to Valentine regarding Licensee's feelings, intentions, and commitments are true and accurate;</p>
+                    <p>(e) Licensee will make reasonable efforts to be the best partner possible to Valentine.</p>
+                    
+                    <p><strong>Section 19.02 - Disclaimer of Warranties.</strong> VALENTINE MAKES NO WARRANTIES, EXPRESS OR IMPLIED, REGARDING VALENTINE'S PERFECTION, MOOD STABILITY, OR PREDICTABILITY. VALENTINE IS PROVIDED "AS IS" AND "AS AVAILABLE." LICENSEE ACCEPTS VALENTINE WITH ALL QUIRKS, IMPERFECTIONS, AND OCCASIONAL IRRATIONAL MOMENTS.</p>
+                    
+                    <p><strong>Section 19.03 - Assumption of Risk.</strong> Licensee acknowledges that entering into a relationship with Valentine involves certain risks, including but not limited to: emotional vulnerability, potential heartbreak, exposure to Valentine's family and friends, and the possibility of Valentine eating all of Licensee's snacks. Licensee assumes all such risks freely and voluntarily.</p>
+                    
+                    <h4>ARTICLE XX: LIMITATION OF LIABILITY</h4>
+                    <p><strong>Section 20.01 - Valentine's Limited Liability.</strong> IN NO EVENT SHALL VALENTINE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATING TO VALENTINE'S ACTIONS, DECISIONS, MOOD SWINGS, OR BEHAVIOR, INCLUDING BUT NOT LIMITED TO:</p>
+                    <p>(a) Damages resulting from Valentine's decisions regarding dinner locations;</p>
+                    <p>(b) Emotional distress caused by Valentine's movie selections;</p>
+                    <p>(c) Loss of free time due to extended cuddling sessions;</p>
+                    <p>(d) Financial impact of treating Valentine to dates and gifts;</p>
+                    <p>(e) Sleep deprivation resulting from late-night conversations;</p>
+                    <p>(f) Any other damages arising from the Relationship, EVEN IF VALENTINE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+                    
+                    <p><strong>Section 20.02 - Indemnification.</strong> Licensee agrees to indemnify, defend, and hold harmless Valentine from and against any and all claims, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to Licensee's breach of this Agreement or Licensee's negligent or intentional acts or omissions.</p>
+                    
+                    <h4>ARTICLE XXI: FORCE MAJEURE</h4>
+                    <p><strong>Section 21.01 - Excused Performance.</strong> Neither party shall be liable for failure to perform obligations under this Agreement when such failure is due to causes beyond reasonable control, including but not limited to: acts of God, natural disasters, pandemics, government restrictions, family emergencies, or other force majeure events. However, such events shall not excuse Licensee from maintaining communication with Valentine to the extent possible under the circumstances.</p>
+                    
+                    <h4>ARTICLE XXII: MODIFICATIONS AND AMENDMENTS</h4>
+                    <p><strong>Section 22.01 - Amendment Authority.</strong> Valentine reserves the right to modify, amend, or supplement this Agreement at any time, with or without notice to Licensee. Continued participation in the Relationship following such modifications shall constitute acceptance of the modified terms.</p>
+                    
+                    <p><strong>Section 22.02 - No Waiver.</strong> No failure or delay by Valentine in exercising any right under this Agreement shall constitute a waiver of such right. No waiver shall be effective unless made in writing and signed by Valentine.</p>
+                    
+                    <h4>ARTICLE XXIII: TERM AND TERMINATION</h4>
+                    <p><strong>Section 23.01 - Term.</strong> This Agreement shall commence upon acceptance and shall continue indefinitely until terminated in accordance with this Article XXIII.</p>
+                    
+                    <p><strong>Section 23.02 - Termination by Valentine.</strong> Valentine may terminate this Agreement at any time, with or without cause, upon written, oral, or electronic notice to Licensee.</p>
+                    
+                    <p><strong>Section 23.03 - Termination by Licensee.</strong> Licensee may request termination of this Agreement by providing written notice to Valentine; however, such termination shall only become effective upon Valentine's acceptance of the termination request. Valentine reserves the right to reject termination requests at Valentine's sole discretion.</p>
+                    
+                    <p><strong>Section 23.04 - Termination for Cause.</strong> Valentine may immediately terminate this Agreement for cause, including but not limited to:</p>
+                    <p>(a) Material breach of any provision of this Agreement by Licensee;</p>
+                    <p>(b) Repeated minor breaches demonstrating a pattern of non-compliance;</p>
+                    <p>(c) Dishonesty or breach of trust;</p>
+                    <p>(d) Failure to show proper appreciation for Valentine;</p>
+                    <p>(e) Any conduct deemed unacceptable by Valentine in Valentine's sole judgment.</p>
+                    
+                    <p><strong>Section 23.05 - Non-Refundable Nature.</strong> Licensee acknowledges and agrees that this Agreement is NON-REFUNDABLE. Upon acceptance, Licensee cannot obtain a refund of time, energy, emotions, or resources invested in the Relationship, regardless of the reason for or timing of termination.</p>
+                    
+                    <p><strong>Section 23.06 - No Returns or Exchanges.</strong> LICENSEE EXPRESSLY ACKNOWLEDGES THAT VALENTINE CANNOT BE RETURNED OR EXCHANGED. All decisions to enter into this Agreement are FINAL. There are no take-backsies.</p>
+                    
+                    <p><strong>Section 23.07 - Effects of Termination.</strong> Upon termination of this Agreement:</p>
+                    <p>(a) Licensee shall return all physical property belonging to Valentine (though Valentine may elect to allow Licensee to keep certain items as mementos);</p>
+                    <p>(b) Both parties shall treat each other with respect and courtesy;</p>
+                    <p>(c) Certain provisions of this Agreement shall survive termination, including confidentiality obligations, non-disparagement clauses, and the obligation to remember the Relationship fondly.</p>
+                    
+                    <h4>ARTICLE XXIV: CONFIDENTIALITY</h4>
+                    <p><strong>Section 24.01 - Confidential Information.</strong> Licensee acknowledges that during the Relationship, Licensee may become privy to confidential information about Valentine, including personal feelings, embarrassing stories, family matters, and other sensitive information. Licensee agrees to maintain the confidentiality of such information both during and after the Relationship.</p>
+                    
+                    <h4>ARTICLE XXV: NON-DISPARAGEMENT</h4>
+                    <p><strong>Section 25.01 - Prohibition on Negative Statements.</strong> Licensee agrees not to make any disparaging, negative, or critical statements about Valentine to third parties, whether during or after the Relationship, except as required by law or as necessary to seek advice from trusted friends or family members.</p>
+                    
+                    <h4>ARTICLE XXVI: GOVERNING LAW AND JURISDICTION</h4>
+                    <p><strong>Section 26.01 - Governing Law.</strong> This Agreement shall be governed by and construed in accordance with the Laws of Love, as interpreted by Valentine, without regard to conflict of law principles.</p>
+                    
+                    <p><strong>Section 26.02 - Jurisdiction.</strong> Any disputes arising under this Agreement shall be resolved in the Court of Valentine's Opinion, where Valentine shall serve as judge, jury, and executioner (metaphorically speaking). Valentine's decisions shall be final and binding.</p>
+                    
+                    <p><strong>Section 26.03 - Arbitration.</strong> As an alternative to the Court of Valentine's Opinion, disputes may be submitted to binding arbitration before a mutually agreed-upon arbitrator, who shall be Valentine's best friend. The arbitrator's decision shall be final and binding, subject to Valentine's right to override such decision.</p>
+                    
+                    <h4>ARTICLE XXVII: SEVERABILITY</h4>
+                    <p><strong>Section 27.01 - Severability Clause.</strong> If any provision of this Agreement is found to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect. The invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable while preserving the original intent of the parties (primarily Valentine's intent).</p>
+                    
+                    <h4>ARTICLE XXVIII: ENTIRE AGREEMENT</h4>
+                    <p><strong>Section 28.01 - Complete Agreement.</strong> This Agreement constitutes the entire agreement between the parties concerning the subject matter hereof and supersedes all prior agreements, understandings, negotiations, and discussions, whether oral or written, between the parties, except for any previous promises Licensee made to Valentine, which shall remain in effect.</p>
+                    
+                    <h4>ARTICLE XXIX: COUNTERPARTS AND ELECTRONIC SIGNATURES</h4>
+                    <p><strong>Section 29.01 - Electronic Acceptance.</strong> This Agreement may be executed by clicking the "I Accept" button below, which shall constitute a legally binding electronic signature with the same force and effect as a handwritten signature.</p>
+                    
+                    <h4>ARTICLE XXX: ACKNOWLEDGMENT OF READING AND UNDERSTANDING</h4>
+                    <p><strong>Section 30.01 - Acknowledgment.</strong> By clicking "I Accept," Licensee acknowledges that:</p>
+                    <p>(a) Licensee has carefully read and fully understands all terms and conditions of this Agreement;</p>
+                    <p>(b) Licensee has had adequate opportunity to review this Agreement and ask questions;</p>
+                    <p>(c) Licensee enters into this Agreement freely and voluntarily, without duress or coercion (except the coercion of Valentine being absolutely irresistible);</p>
+                    <p>(d) Licensee agrees to be bound by all terms and conditions set forth herein;</p>
+                    <p>(e) Licensee acknowledges that Valentine is amazing and this is the best decision Licensee has ever made.</p>
+                    
+                    <h4>ARTICLE XXXI: SPECIAL PROVISIONS</h4>
+                    <p><strong>Section 31.01 - The "I Love You" Clause.</strong> Licensee agrees to tell Valentine "I love you" regularly and sincerely, at minimum three (3) times per day, and at random unexpected moments to maximize romantic impact.</p>
+                    
+                    <p><strong>Section 31.02 - The Goodnight Kiss Mandate.</strong> Under no circumstances shall either party go to sleep without exchanging goodnight kisses, except in cases of illness, physical separation due to travel, or other force majeure events.</p>
+                    
+                    <p><strong>Section 31.03 - The Inside Jokes Amendment.</strong> The parties agree to develop and maintain an extensive repertoire of inside jokes that no one else will understand, thereby strengthening their bond and confusing their friends.</p>
+                    
+                    <p><strong>Section 31.04 - The Future Planning Provision.</strong> Licensee agrees to engage in discussions about future plans, dreams, and goals with Valentine, and to include Valentine in Licensee's vision of the future.</p>
+                    
+                    <h4>FINAL PROVISIONS</h4>
+                    <p><strong>YOU HAVE NOW REACHED THE END OF THE TERMS AND CONDITIONS.</strong></p>
+                    
+                    <p>By scrolling to this point, you have demonstrated exceptional commitment and dedication (or at least the ability to scroll really fast). Congratulations!</p>
+                    
+                    <p>Please note that despite the humorous and exaggerated nature of many provisions in this Agreement, the underlying sentiment is genuine: this Relationship is built on mutual respect, love, care, and the understanding that we're both imperfect humans trying our best to make each other happy.</p>
+                    
+                    <p><strong>IN WITNESS WHEREOF,</strong> you may now click the "I Accept" button below to formalize your acceptance of these terms and officially become my Valentine. No pressure though. (Okay, maybe a little pressure. I mean, you did click "YES" and scroll through this entire document, so...)</p>
+                    
+                    <p style="margin-top: 30px; text-align: center;"><strong>Ready to make it official?</strong></p>
+                    <p style="text-align: center;"><em>Click the button below! ⬇️</em></p>
+                </div>
+            </div>
+            
+            <button id="acceptBtn" onclick="showConfirmation()" disabled>I Accept 💕</button>
+            <p id="scrollWarning" style="color: #ff69b4; margin-top: 10px; font-size: 0.9em;">⬆️ Please scroll to the bottom first!</p>
+        </div>
+
+        <div id="confirmationBox" class="celebration">
+            <h2>Are You Sure? 🤔</h2>
+            <p style="margin-bottom: 20px; font-size: 1.2em;">This is a LIFETIME commitment!</p>
+            <p style="margin-bottom: 30px;">Once you click "Yes, I'm Sure," there's no going back...</p>
+            
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <button onclick="finalCelebration()" style="background: linear-gradient(135deg, #ff1493, #ff69b4); color: white; padding: 15px 30px; font-size: 1.1em; border: none; border-radius: 50px; cursor: pointer;">
+                    Yes, I'm Sure! 💕
+                </button>
+                <button onclick="showTerms()" style="background: linear-gradient(135deg, #ddd, #bbb); color: #666; padding: 15px 30px; font-size: 1.1em; border: none; border-radius: 50px; cursor: pointer;">
+                    Let me re-read... 📋
+                </button>
+            </div>
+        </div>
+
+        <div id="celebration" class="celebration">
+            <h2>Yay! 🎉💕</h2>
+            <div class="heart">❤️</div>
+            <p>I'm so happy! You just made my day! 💖</p>
+            <p style="margin-top: 20px; font-size: 1.1em;">I can't wait to celebrate with you, Taylar! 🥰</p>
+            <p style="margin-top: 15px; font-size: 1em;">Love, Rishi 💕</p>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">P.S. You're now legally bound to all those terms 😏</p>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const container = document.querySelector('.button-container');
+        
+        let yesBtnSize = 1;
+        let attempts = 0;
+
+        function moveButton() {
+            // Add position absolute on first move
+            if (!noBtn.classList.contains('moving')) {
+                noBtn.classList.add('moving');
+            }
+            
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Calculate safe boundaries (keep button within container)
+            const maxX = containerRect.width - btnRect.width - 20;
+            const maxY = containerRect.height - btnRect.height - 20;
+            
+            // Generate random position
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            // Make YES button bigger each time
+            attempts++;
+            yesBtnSize += 0.1;
+            yesBtn.style.transform = `scale(${yesBtnSize})`;
+        }
+
+        // Move button on hover
+        noBtn.addEventListener('mouseenter', moveButton);
+        
+        // Move button on touch (for mobile)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // Also move if they somehow click it
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        function celebrate() {
+            document.getElementById('questionBox').style.display = 'none';
+            document.getElementById('termsBox').style.display = 'block';
+        }
+
+        function showConfirmation() {
+            document.getElementById('termsBox').style.display = 'none';
+            document.getElementById('confirmationBox').style.display = 'block';
+        }
+
+        function showTerms() {
+            document.getElementById('confirmationBox').style.display = 'none';
+            document.getElementById('termsBox').style.display = 'block';
+            // Scroll back to top of terms
+            document.querySelector('.terms-container').scrollTop = 0;
+            document.getElementById('acceptBtn').disabled = true;
+            document.getElementById('scrollWarning').style.display = 'block';
+        }
+
+        function finalCelebration() {
+            document.getElementById('confirmationBox').style.display = 'none';
+            document.getElementById('celebration').style.display = 'block';
+            
+            // Create falling hearts animation
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => createFallingHeart(), i * 100);
+            }
+        }
+
+        // Enable accept button when scrolled to bottom
+        document.addEventListener('DOMContentLoaded', function() {
+            const termsContainer = document.querySelector('.terms-container');
+            if (termsContainer) {
+                termsContainer.addEventListener('scroll', function() {
+                    const scrolledToBottom = this.scrollHeight - this.scrollTop <= this.clientHeight + 50;
+                    if (scrolledToBottom) {
+                        document.getElementById('acceptBtn').disabled = false;
+                        document.getElementById('scrollWarning').style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        function createFallingHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = '-50px';
+            heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+            heart.style.zIndex = '1000';
+            heart.style.pointerEvents = 'none';
+            heart.style.animation = 'fall 3s linear';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        // Add falling animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(${window.innerHeight + 100}px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
